@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ecommerce website</title>
+    <link rel = "stylesheet" href = "ProductList.css">
+</head>
+<body>
+    <h1><u>E-commerce Website</u></h1>
+    <div class="container">
+        <div class="upper-div" >
+            <div class="inputs">
+                <input id="nameBox" type="text" placeholder="Product name">
+                <input id="quanBox" type="number" placeholder="Quantity of product">
+                <input id="priceBox" type="number" placeholder="Price per product">
+                <input id="descBox" type="text" placeholder="Description">
+            </div>
+            <div class="Buttons">
+                <button id="addBtn">Add Product</button>
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+        <div class="lower-div"></div>
+        <div class="pagination">
+            <button onclick="prevPage()">Previous</button>
+            <span id="pageNumber" style = "font-family :'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"></span>
+            <button onclick="nextPage()">Next</button>
+        </div>
+
+    </div>
+    </div>
+    <script src="ProductList.js"></script>
+</body>
+</html>
+
+

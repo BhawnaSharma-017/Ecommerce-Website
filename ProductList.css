@@ -1,0 +1,49 @@
+body,html{
+    height: 100%;
+    width : 100%;
+    box-sizing: border-box;
+ } 
+body{
+    background-image: url('background.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+ }
+
+ h1{
+    text-align: center;
+    margin-bottom: 40px;
+    color: rgb(27, 2, 94);
+ }
+ .lower-div {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+.upper-div{
+    display:flex;
+}
+.item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+}
+button{
+    background-color: rgb(111, 133, 173);
+    color: rgb(134, 247, 247);
+    border: 1.5px solid rgb(98, 98, 230);
+    padding : 4px;
+    border-radius: 8px;
+    margin-left: 5px;
+}
+button:hover{
+    cursor :pointer;
+    background-color: rgb(5, 122, 122);
+    color: rgb(71, 252, 252);
+}
+
+.pagination{
+    text-align: center; 
+    margin-top: 20px;
+}

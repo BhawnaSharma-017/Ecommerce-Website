@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Cart</title>
+  <link rel="stylesheet" href="cart.css" />
+</head>
+<body>
+  <h1>Your Cart</h1>
+  <div id="cart"></div>
+  <p id="totalAmount"></p>
+  <div id="buyNow">
+    <button onclick="checkout()">Buy Now</button>
+  </div>
+  <br /><br />
+  <div id="BackToProduct">
+    <a href="products.html">Back to Products</a>
+  </div>
+  <script>
+    let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+
+    function renderCart() {
+      const cartDiv = document.getElementById("cart");
+      cartDiv.innerHTML = "";
+
+      if (cartItems.length === 0) {
+        cartDiv.innerHTML = "<p>Cart is empty.</p>";
+        document.getElementById("totalAmount").innerText = "";
+        return;
+      }
+
+      let total = 0;
+
+      cartItems.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <p><strong>${item.name}</strong> - Rs.${item.price} x 
+          <input type="number" min="1" value="${item.quantity}" onchange="updateQty(${index}, this.value)">
+          : Rs.${itemTotal.toFixed(2)}</p>
+          <button id="removeBtn" onclick="removeItem(${index})">Remove</button>
+          <hr/>
+        `;
+        cartDiv.appendChild(div);
+      });
+
+      document.getElementById("totalAmount").textContent = `Total: Rs.${total.toFixed(2)}`;
+    }
+
+    function updateQty(index, value) {
+      const newQty = parseInt(value);
+      if (isNaN(newQty) || newQty < 1) {
+        alert("Invalid quantity.");
+        renderCart();
+        return;
+      }
+
+      const items = JSON.parse(localStorage.getItem("items")) || [];
+      const cartItem = cartItems[index];
+      const product = items.find(p => p.name === cartItem.name);
+      const currentQty = cartItem.quantity;
+      const diff = newQty - currentQty;
+
+      if (diff > 0 && product.quantity < diff + cartItems.filter(i => i.name === product.name).reduce((sum, i) => sum + i.quantity, 0) - currentQty) {
+        alert(`Only ${product.quantity} items available in stock.`);
+        renderCart();
+        return;
+      }
+
+      cartItem.quantity = newQty;
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+      renderCart();
+    }
+
+    function removeItem(index) {
+      cartItems.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+      renderCart();
+    }
+
+    function checkout() {
+      if (cartItems.length === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      const items = JSON.parse(localStorage.getItem("items")) || [];
+
+      for (const cartItem of cartItems) {
+        const product = items.find(p => p.name === cartItem.name);
+        if (!product || product.quantity < cartItem.quantity) {
+          alert(`Insufficient stock for ${cartItem.name}.`);
+          return;
+        }
+      }
+
+      cartItems.forEach(cartItem => {
+        const product = items.find(p => p.name === cartItem.name);
+        if (product) {
+          product.quantity -= cartItem.quantity;
+        }
+      });
+
+      localStorage.setItem("items", JSON.stringify(items));
+      localStorage.removeItem("cart");
+      cartItems = [];
+      alert("Thank you for your purchase!");
+      renderCart();
+    }
+
+    window.onload = renderCart;
+  </script>
+</body>
+</html>
