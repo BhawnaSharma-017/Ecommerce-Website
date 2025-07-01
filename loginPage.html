@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login & Sign-up Page</title>
+  <link rel="stylesheet" href="loginPage.css">
+</head>
+<body>
+  <button onclick="showForm('login')">Login</button>
+  <button onclick="showForm('signup')">Sign Up</button>
+
+  <div class="form-box" id="loginPage">
+    <div class="formContainer" id="loginForm">
+      <h2>Login</h2>
+      Username:
+      <input type="text" id="username" placeholder="Username" />
+      Email:
+      <input type="email" id="email" placeholder="Email-id" />
+      Password:
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="handleLogin()">Submit</button>
+    </div>
+  </div>
+
+  <div class="form-box" id="signPage">
+    <div class="formContainer" id="signForm">
+      <h2>Sign Up</h2>
+      Username:
+      <input type="text" id="Signusername" placeholder="Username" />
+      Email:
+      <input type="email" id="Signemail" placeholder="Email-id" />
+      Password:
+      <input type="password" id="Signpassword" placeholder="Password" />
+      Age:
+      <input type="number" id="Signage" placeholder="Age" />
+      As an Admin:
+      <input type="checkbox" id="isAdmin" title="checkbox"/>
+      <button onclick="handleSignup()">Submit</button>
+    </div>
+  </div>
+
+  <script>
+    let loginPage = document.querySelector("#loginPage");
+    let signPage = document.querySelector("#signPage");
+
+    // Show appropriate form
+    function showForm(formType) {
+      loginPage.style.display = formType === 'login' ? 'block' : 'none';
+      signPage.style.display = formType === 'signup' ? 'block' : 'none';
+    }
+
+    // Handle signup
+    function handleSignup() {
+      const username = document.getElementById("Signusername").value.trim();
+      const email = document.getElementById("Signemail").value.trim();
+      const password = document.getElementById("Signpassword").value;
+      const age = parseInt(document.getElementById("Signage").value);
+      const isAdmin = document.getElementById("isAdmin").checked;
+
+      if (!username || !email || !password || isNaN(age)) {
+        alert("Please fill in all fields correctly.");
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+
+      if (users.some(user => user.email === email)) {
+        alert("Email is already registered.");
+        return;
+      }
+
+      users.push({ username, email, password, age, isAdmin });
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Sign up successful! You can now log in.");
+
+      // Clear form fields
+      document.getElementById("Signusername").value = '';
+      document.getElementById("Signemail").value = '';
+      document.getElementById("Signpassword").value = '';
+      document.getElementById("Signage").value = '';
+      document.getElementById("isAdmin").checked = false;
+
+      showForm('login');
+    }
+
+    // Handle login
+    function handleLogin() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if (!user) {
+        alert("Invalid email or password.");
+        return;
+      }
+
+      localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+      if (user.isAdmin) {
+        window.location.href = "ProductList.html";
+      } else {
+        window.location.href = "products.html";
+      }
+    }
+
+    // On page load: check if user is already logged in
+    window.onload = function () {
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      if (loggedInUser) {
+        if (loggedInUser.isAdmin) {
+          window.location.href = "ProductList.html";
+        } else {
+          window.location.href = "products.html";
+        }
+      }
+    };
+  </script>
+</body>
+</html> 
+
+
